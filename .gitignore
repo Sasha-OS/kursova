@@ -1,0 +1,6 @@
+__pycache__/
+.idea/
+dataset.csv
+model.h5
+.DS_Store
+image.png
