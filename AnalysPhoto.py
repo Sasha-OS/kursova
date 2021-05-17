@@ -2,9 +2,9 @@ from PIL import Image
 from itertools import groupby
 import numpy as np
 import keras
-import os
+import os.path
 
-if(os.path.exists("model.h5")):
+if os.path.exists("model.h5"):
     model = keras.models.load_model("model.h5")
 elements_pred = []
 elements_array = []
@@ -98,7 +98,7 @@ def analysPhoto(photo):
             equation = m_exp_str + " = " + str(answer)
             answer = equation
             print(equation)  # printing the equation
-            break
+            return answer
 
         except SyntaxError:
             print("Invalid predicted expression!!")

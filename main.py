@@ -15,30 +15,32 @@ height = 200
 center = height // 2
 white = (255, 255, 255)
 green = (0, 128, 0)
-
+filename = "image.png"
 
 class tkinterApp(tk.Tk):  # створення класу, який відповідає за усі фрейми
+    container = None
     def __init__(self, *args, **kwargs):
         # __init__ function for class Tk
         tk.Tk.__init__(self, *args, **kwargs)
 
-        container = tk.Frame(self)  # Створення фрейму
-        container.pack(side="top", fill="both", expand=True)  # додаємо на екран
+        self.container = tk.Frame(self)  # Створення фрейму
+        self.container.pack(side="top", fill="both", expand=True)  # додаємо на екран
 
         self.frames = {}
 
         for F in (StartPage, Page1, Page2, Page3):  # Створення 5 фреймів та додання в змінну
-            frame = F(container, self)
-
+            frame = F(self.container, self)
             self.frames[F] = frame
-
             frame.grid(row=0, column=0, sticky="nsew")
 
         self.show_frame(StartPage)  # Початкова сторінка
 
     def show_frame(self, cont):
+        if self.frames[cont] == self.frames[Page3]:
+            self.frames[cont] = Page3(self.container, self).grid(row=0, column=0, sticky="nsew")
         frame = self.frames[cont]
         frame.tkraise()
+
 
 
 class StartPage(tk.Frame):  # Початкова сторінка
@@ -105,10 +107,9 @@ class Page1(tk.Frame):  # Створення наступного фрейму
         self.draw = ImageDraw.Draw(self.image1)
 
     def save(self):
-        filename = "image.png"
         self.image1.save(filename)
         self.controller.show_frame(Page3)
-        analysPhoto(filename)
+
 
 
     def paint(self, event):
@@ -144,7 +145,7 @@ class Page3(tk.Frame):  # Початкова сторінка
         tk.Frame.__init__(self, parent)
         label = ttk.Label(self, text="Result", font=("Verdana", 35))
         label.pack()
-        Answer = ttk.Label(self, text=answer, font=("Verdana", 12))
+        Answer = ttk.Label(self, text= analysPhoto(filename), font=("Verdana", 12))
         Answer.pack()
         Answer = ttk.Label(self, text='If answer uncorrect write line and submit', font=("Verdana", 12))
         Answer.pack()
@@ -163,6 +164,10 @@ class Page3(tk.Frame):  # Початкова сторінка
     def updateModel(self):
         print(self.inputField.get())
         updateModel(self.inputField.get())
+
+    def refresh(self):
+        self.destroy()
+        self.__init__()
 
 app = tkinterApp()
 app.mainloop()
